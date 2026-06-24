@@ -111,7 +111,7 @@ def lambda_handler(event, context):
         for symbol in SYMBOLS:
             try:
               # --- CHECK IF FILE EXISTS ---
-                key = f"binance-futures-derivative/symbol={symbol}/{symbol}-derivative-{PERIOD}.parquet"
+                key = f"binance-futures/symbol={symbol}/{symbol}-derivative-{PERIOD}.parquet"
                 try:
                     s3.head_object(Bucket=S3_BUCKET, Key= key)
                     first_run = False
