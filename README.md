@@ -36,9 +36,11 @@ This function runs on a scheduled trigger (EventBridge) and collects 5 derivativ
 
         └── Amazon S3
 
-              └── binance-futures-derivative/
+              └── binance-futures/
+              
+                    └── symbol={SYMBOL}/
 
-                    └── {SYMBOL}-derivative-{PERIOD}.parquet
+                            └── {SYMBOL}-derivative-{PERIOD}.parquet
 
 **First run:** fetches up to 500 rows (full history) per symbol. (binance API limit)  
 **Subsequent runs:** fetches `LIMIT` rows, upserts, deduplicates by timestamp.
@@ -64,7 +66,7 @@ SYMBOLS	\= BTCUSDT,ETHUSDT,SOLUSDT
 
 PERIOD	\= 1h
 
-LIMIT		\= 72
+LIMIT	\= 72
 
 ---
 
@@ -72,11 +74,11 @@ LIMIT		\= 72
 
 One Parquet file per symbol is written to:
 
-s3://{S3\_BUCKET}/binance-futures-derivative/{SYMBOL}-derivative-{PERIOD}.parquet
+s3://{S3\_BUCKET}/binance-futures/symbol={SYMBOL}/{SYMBOL}-derivative-{PERIOD}.parquet
 
 The file is an indexed DataFrame with a UTC `timestamp` index and wide-format columns:
 
-timestamp (index, UTC)
+timestamp (index)
 
 ├── oi\_sumOpenInterest
 
@@ -124,7 +126,7 @@ The Lambda execution role needs the following S3 permissions on your bucket:
 
           \],
 
-          "Resource": "arn:aws:s3:::your-bucket-name/binance-futures-derivative/\*"
+          "Resource": "arn:aws:s3:::your-bucket-name/binance-futures/\*"
         
         },
             {
